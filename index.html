@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+	</head>
+	<body>
+
+		<div class="main_div"></div>
+		<button type="">PRESS ME YOU FUCKER</button>
+		<script>
+
+			// Dataset
+			// TODO: Deixar o dataset variavel
+			var dataset = [[0, 0, 0], [480, 90, 12], [250, 50, 34], [100, 33, 90], [330, 95, 20], [410, 12, 39], [475, 44, 48], [25, 67, 28], [85, 21, 89], [220, 88, 99]];
+
+			// Svg
+			var margin = 10;
+			var width = 500 - margin - margin;
+			var height = 300 - margin - margin;
+			var canvas = d3.select(".main_div")
+							.append("svg")
+							.attr("width", width+margin+margin)
+							.attr("height", height+margin+margin)
+							.append("g")
+							.attr("transform", "translate("+margin+","+margin+")");			// Faz translate para criar uma margin e nao ocultar dados nos cantos da tela
+
+			// Escalas
+			var xScale = d3.scaleLinear().domain([0,d3.max(dataset.map(function(d){return d[0];}))]).range([margin,width-(margin*2)]);
+			var yScale = d3.scaleLinear().domain([0,d3.max(dataset.map(function(d){return d[1];}))]).range([height-(margin*2),margin]);
+			var cScale = d3.scaleLinear().domain([0,d3.max(dataset.map(function(d){return d[2];}))]).range(["#B0BEC5","#1E88E5"])
+
+			// Completa com os circulos
+			canvas.selectAll("circle").data(dataset).enter().append("circle").attr("r","10")
+				.attr("cx",function(d){return xScale(d[0]);})
+				.attr("cy",function(d){return yScale(d[1]);})
+				.attr("fill",function(d){return cScale(d[2]);});
+
+			// Axis
+			var xAxis = d3.axisBottom(xScale);
+			var yAxis = d3.axisLeft(yScale);
+			var xAxisGroup = canvas.append("g")
+								.attr("class","xAxis")
+								.attr("transform",
+									"translate(0,"+(height-(margin*2))+")"); 				// Faz translate para baixo e tira as duas margins (top and bottom)
+			var yAxisGroup = canvas.append("g")
+								.attr("class","yAxis")
+								.attr("transform",
+									"translate("+(margin)+",0)");							// Faz translate da margin.left
+
+			// Cria os Axis
+			xAxisGroup.call(xAxis);
+			yAxisGroup.call(yAxis);
+
+		</script>
+	</body>
+</html>
